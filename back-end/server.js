@@ -1,6 +1,5 @@
 const express = require("express");
 const { MongoClient } = require("mongodb");
-const XLSX = require("xlsx");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
