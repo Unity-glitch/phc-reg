@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Potter's House Church - Registration</title>
+    <link rel="stylesheet" href="../Home/styles.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="preloader">
+      <img class="" src="../images/PHC-logo.png" />
+    </div>
+    <div class="scroll__animation">
+      <div class="section__two">
+        <div class="top__two">
+          <h1>We are Issachars</h1>
+          <p>Register here to be part of us</p>
+        </div>
+        <div class="bottom">
+          <form id="registrationForm" class="form__container" action="">
+            <div class="inputs">
+              <input
+                name="fullName"
+                type="text"
+                placeholder="Full Name"
+                required
+              />
+              <input name="email" type="email" placeholder="Email" required />
+              <input
+                name="phoneNumber"
+                type="number"
+                placeholder="Phone Number"
+                required
+              />
+              <input
+                name="whatsAppNumber"
+                type="number"
+                placeholder="WhatsApp Number"
+                required
+              />
+              <input
+                name="occupation"
+                type="text"
+                placeholder="Occupation"
+                required
+              />
+              <input
+                name="dob"
+                type="text"
+                placeholder="Date of Birth"
+                onfocus="this.type = 'date'"
+                onblur="if (!this.value) this.type = 'text';"
+                required
+              />
+              <input
+                name="weddingAnniversary"
+                type="text"
+                placeholder="Wedding Anniversary"
+                onfocus="this.type = 'date'"
+                onblur="if (!this.value) this.type = 'text';"
+              />
+              <select name="gender" class="gender__select" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+              <select name="maritalStatus" class="gender__select" required>
+                <option value="" disabled selected>Marital Status</option>
+                <option value="Single">Single</option>
+                <option value="Married">Married</option>
+                <option value="Widow">Widow</option>
+                <option value="Widower">Widower</option>
+                <option value="Engaged">Engaged</option>
+                <option value="In a relationship">In a Relationship</option>
+              </select>
+              <textarea
+                name="address"
+                id="textArea"
+                required
+                placeholder="Residential Address"
+              ></textarea>
+              <button type="submit" class="sub__btn">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="../Home/preloader.js"></script>
+  <script src="../Home/animation.js"></script>
+  <script src="../Home/mongoDB.js"></script>
+</html>
