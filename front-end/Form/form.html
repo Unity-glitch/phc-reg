@@ -391,20 +391,20 @@
         overlay.classList.add("show");
         // ✅ Auto-redirect after 4 seconds
         setTimeout(() => {
-          window.location.href = "../index.html";
+          window.location.href = "/index.html";
         }, 4000);
       }
 
       function closeSuccess() {
         // ✅ Continue button goes home
-        window.location.href = "../index.html";
+        window.location.href = "/index.html";
       }
 
       // Close on backdrop click → go home
       document
         .getElementById("success-overlay")
         .addEventListener("click", function (e) {
-          if (e.target === this) window.location.href = "../index.html";
+          if (e.target === this) window.location.href = "/index.html";
         });
 
       document
