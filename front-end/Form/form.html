@@ -389,18 +389,22 @@
       function showSuccess() {
         const overlay = document.getElementById("success-overlay");
         overlay.classList.add("show");
+        // ✅ Auto-redirect after 4 seconds
+        setTimeout(() => {
+          window.location.href = "../index.html";
+        }, 4000);
       }
 
       function closeSuccess() {
-        const overlay = document.getElementById("success-overlay");
-        overlay.classList.remove("show");
+        // ✅ Continue button goes home
+        window.location.href = "../index.html";
       }
 
-      // Close on backdrop click
+      // Close on backdrop click → go home
       document
         .getElementById("success-overlay")
         .addEventListener("click", function (e) {
-          if (e.target === this) closeSuccess();
+          if (e.target === this) window.location.href = "../index.html";
         });
 
       document
