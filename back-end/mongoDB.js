@@ -132,6 +132,7 @@ form.addEventListener("submit", async (e) => {
     occupation: form.occupation.value,
     weddingAnniversary: form.weddingAnniversary.value,
     dob: form.dob.value,
+    community: form.community.value,
   };
 
   try {
