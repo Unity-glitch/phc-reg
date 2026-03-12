@@ -495,19 +495,40 @@
             selMonth = null,
             selYear = null;
 
-          // Build days 1–31
-          const days = Array.from({ length: 31 }, (_, i) => ({
-            label: pad(i + 1),
-            value: pad(i + 1),
-          }));
+          function getDaysInMonth(month, year) {
+            if (!month) return 31;
+            const m = parseInt(month);
+            // Use year if available, else 2000 (leap year) so Feb shows 29
+            const y = year ? parseInt(year) : 2000;
+            return new Date(y, m, 0).getDate();
+          }
 
-          // Build months
+          function buildDays(month, year) {
+            const count = getDaysInMonth(month, year);
+            const days = Array.from({ length: count }, (_, i) => ({
+              label: pad(i + 1),
+              value: pad(i + 1),
+            }));
+            buildList(dayListEl, days, (v) => {
+              selDay = v;
+              dayListEl.style.outline = "";
+            });
+            // Re-select previously selected day if still valid
+            if (selDay && parseInt(selDay) <= count) {
+              const items = dayListEl.querySelectorAll(".dp-item");
+              items.forEach((el) => {
+                if (el.dataset.value === selDay) el.classList.add("selected");
+              });
+            } else {
+              selDay = null;
+            }
+          }
+
           const months = MONTHS.map((m, i) => ({
             label: m.slice(0, 3),
             value: pad(i + 1),
           }));
 
-          // Build years (current year down to 1940)
           const currentYear = new Date().getFullYear();
           const years = Array.from({ length: currentYear - 1939 }, (_, i) => ({
             label: String(currentYear - i),
@@ -528,10 +549,21 @@
               ) || picker.querySelector("[id$='year-list']")
             : null;
 
-          buildList(dayListEl, days, (v) => (selDay = v));
-          buildList(monthListEl, months, (v) => (selMonth = v));
-          if (includeYear && yearListEl)
-            buildList(yearListEl, years, (v) => (selYear = v));
+          // Build initial days (no month selected yet, default 31)
+          buildDays(null, null);
+
+          buildList(monthListEl, months, (v) => {
+            selMonth = v;
+            monthListEl.style.outline = "";
+            buildDays(selMonth, selYear); // Rebuild days when month changes
+          });
+
+          if (includeYear && yearListEl) {
+            buildList(yearListEl, years, (v) => {
+              selYear = v;
+              buildDays(selMonth, selYear); // Rebuild days when year changes (affects Feb in leap years)
+            });
+          }
 
           // Toggle open
           input.addEventListener("click", (e) => {
@@ -544,14 +576,12 @@
           });
 
           picker.addEventListener("click", (e) => e.stopPropagation());
-
           document.addEventListener("click", () =>
             picker.classList.remove("open"),
           );
 
           confirmBtn.addEventListener("click", () => {
             if (!selDay || !selMonth) {
-              // Highlight missing
               if (!selDay) dayListEl.style.outline = "1px solid #ff6b6b";
               if (!selMonth) monthListEl.style.outline = "1px solid #ff6b6b";
               return;
