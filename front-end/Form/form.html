@@ -323,31 +323,75 @@
                 placeholder="Email Address"
                 required
               />
-              <input
-                name="dob"
-                type="text"
-                placeholder="Birthday (DD/MM)"
-                pattern="^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])$"
-                maxlength="5"
-                oninput="
-                  this.value = this.value.replace(/[^0-9\/]/g, '');
-                  if (this.value.length === 2 && !this.value.includes('/')) {
-                    this.value += '/';
-                  }
-                "
-                required
-              />
-              <input
-                name="weddingAnniversary"
-                type="text"
-                placeholder="Wedding Anniversary (DD-MM-YYYY)"
-                pattern="\d{2}-\d{2}-\d{4}"
-                onfocus="this.type = 'date'"
-                onblur="
-                  if (!this.value) this.type = 'text';
-                  else this.value = formatDate(this.value);
-                "
-              />
+              <!-- Replace your two date inputs with these, and add the CSS + JS below -->
+
+              <!-- BIRTHDAY: Day + Month only -->
+              <div class="date-picker-wrap" id="dob-wrap">
+                <input
+                  name="dob"
+                  type="text"
+                  placeholder="Birthday (DD / MM)"
+                  id="dob-input"
+                  autocomplete="off"
+                  readonly
+                  required
+                />
+                <div class="datepicker-dropdown" id="dob-picker">
+                  <div class="dp-header">
+                    <span class="dp-label">Select Birthday</span>
+                  </div>
+                  <div class="dp-body">
+                    <div class="dp-col">
+                      <label>Day</label>
+                      <div class="dp-scroll" id="dob-day-list"></div>
+                    </div>
+                    <div class="dp-divider"></div>
+                    <div class="dp-col">
+                      <label>Month</label>
+                      <div class="dp-scroll" id="dob-month-list"></div>
+                    </div>
+                  </div>
+                  <button type="button" class="dp-confirm" id="dob-confirm">
+                    Confirm
+                  </button>
+                </div>
+              </div>
+
+              <!-- WEDDING ANNIVERSARY: Day + Month + Year -->
+              <div class="date-picker-wrap" id="wed-wrap">
+                <input
+                  name="weddingAnniversary"
+                  type="text"
+                  placeholder="Wedding Anniversary (DD / MM / YYYY)"
+                  id="wed-input"
+                  autocomplete="off"
+                  readonly
+                />
+                <div class="datepicker-dropdown" id="wed-picker">
+                  <div class="dp-header">
+                    <span class="dp-label">Select Anniversary</span>
+                  </div>
+                  <div class="dp-body">
+                    <div class="dp-col">
+                      <label>Day</label>
+                      <div class="dp-scroll" id="wed-day-list"></div>
+                    </div>
+                    <div class="dp-divider"></div>
+                    <div class="dp-col">
+                      <label>Month</label>
+                      <div class="dp-scroll" id="wed-month-list"></div>
+                    </div>
+                    <div class="dp-divider"></div>
+                    <div class="dp-col">
+                      <label>Year</label>
+                      <div class="dp-scroll" id="wed-year-list"></div>
+                    </div>
+                  </div>
+                  <button type="button" class="dp-confirm" id="wed-confirm">
+                    Confirm
+                  </button>
+                </div>
+              </div>
               <select name="community" class="gender__select" required>
                 <option value="" disabled selected>Community</option>
                 <option value="Community 1">Community 1</option>
@@ -403,6 +447,150 @@
     </div>
 
     <script>
+      // ── Custom Datepicker Logic ──
+      (function () {
+        const MONTHS = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+
+        function pad(n) {
+          return String(n).padStart(2, "0");
+        }
+
+        function buildList(container, items, onSelect) {
+          container.innerHTML = "";
+          items.forEach((item, i) => {
+            const el = document.createElement("div");
+            el.className = "dp-item";
+            el.textContent = item.label;
+            el.dataset.value = item.value;
+            el.addEventListener("click", () => {
+              container
+                .querySelectorAll(".dp-item")
+                .forEach((x) => x.classList.remove("selected"));
+              el.classList.add("selected");
+              onSelect(item.value, el);
+            });
+            container.appendChild(el);
+          });
+        }
+
+        function initPicker({ inputId, pickerId, confirmId, includeYear }) {
+          const input = document.getElementById(inputId);
+          const picker = document.getElementById(pickerId);
+          const confirmBtn = document.getElementById(confirmId);
+
+          let selDay = null,
+            selMonth = null,
+            selYear = null;
+
+          // Build days 1–31
+          const days = Array.from({ length: 31 }, (_, i) => ({
+            label: pad(i + 1),
+            value: pad(i + 1),
+          }));
+
+          // Build months
+          const months = MONTHS.map((m, i) => ({
+            label: m,
+            value: pad(i + 1),
+          }));
+
+          // Build years (current year down to 1940)
+          const currentYear = new Date().getFullYear();
+          const years = Array.from({ length: currentYear - 1939 }, (_, i) => ({
+            label: String(currentYear - i),
+            value: String(currentYear - i),
+          }));
+
+          const dayListEl =
+            document.getElementById(
+              inputId.replace("input", "") + "day-list",
+            ) || picker.querySelector("[id$='day-list']");
+          const monthListEl =
+            document.getElementById(
+              inputId.replace("input", "") + "month-list",
+            ) || picker.querySelector("[id$='month-list']");
+          const yearListEl = includeYear
+            ? document.getElementById(
+                inputId.replace("input", "") + "year-list",
+              ) || picker.querySelector("[id$='year-list']")
+            : null;
+
+          buildList(dayListEl, days, (v) => (selDay = v));
+          buildList(monthListEl, months, (v) => (selMonth = v));
+          if (includeYear && yearListEl)
+            buildList(yearListEl, years, (v) => (selYear = v));
+
+          // Toggle open
+          input.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isOpen = picker.classList.contains("open");
+            document
+              .querySelectorAll(".datepicker-dropdown.open")
+              .forEach((d) => d.classList.remove("open"));
+            if (!isOpen) picker.classList.add("open");
+          });
+
+          picker.addEventListener("click", (e) => e.stopPropagation());
+
+          document.addEventListener("click", () =>
+            picker.classList.remove("open"),
+          );
+
+          confirmBtn.addEventListener("click", () => {
+            if (!selDay || !selMonth) {
+              // Highlight missing
+              if (!selDay) dayListEl.style.outline = "1px solid #ff6b6b";
+              if (!selMonth) monthListEl.style.outline = "1px solid #ff6b6b";
+              return;
+            }
+            dayListEl.style.outline = "";
+            monthListEl.style.outline = "";
+
+            if (includeYear) {
+              if (!selYear) {
+                if (yearListEl) yearListEl.style.outline = "1px solid #ff6b6b";
+                return;
+              }
+              if (yearListEl) yearListEl.style.outline = "";
+              input.value = `${selDay} / ${selMonth} / ${selYear}`;
+            } else {
+              input.value = `${selDay} / ${selMonth}`;
+            }
+
+            picker.classList.remove("open");
+          });
+        }
+
+        // DOB: day + month
+        initPicker({
+          inputId: "dob-input",
+          pickerId: "dob-picker",
+          confirmId: "dob-confirm",
+          includeYear: false,
+        });
+
+        // Wedding: day + month + year
+        initPicker({
+          inputId: "wed-input",
+          pickerId: "wed-picker",
+          confirmId: "wed-confirm",
+          includeYear: true,
+        });
+      })();
+
       function showSuccess() {
         const overlay = document.getElementById("success-overlay");
         overlay.classList.add("show");

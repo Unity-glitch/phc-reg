@@ -17,6 +17,155 @@
     sans-serif;
 }
 
+/* ── Custom Datepicker ── */
+.date-picker-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.date-picker-wrap input {
+  cursor: pointer;
+}
+
+.datepicker-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 9999;
+  background: linear-gradient(160deg, #0f1e14, #1a3322);
+  border: 1px solid rgba(134, 197, 118, 0.25);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  min-width: 280px;
+  animation: dpFadeIn 0.2s ease;
+}
+
+.datepicker-dropdown.open {
+  display: block;
+}
+
+@keyframes dpFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dp-header {
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(134, 197, 118, 0.15);
+  padding-bottom: 10px;
+}
+
+.dp-label {
+  font-family: "Jost", sans-serif;
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #86c576;
+}
+
+.dp-body {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.dp-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.dp-col label {
+  font-family: "Jost", sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(240, 247, 238, 0.4);
+  margin-bottom: 8px;
+}
+
+.dp-divider {
+  width: 1px;
+  background: rgba(134, 197, 118, 0.15);
+  align-self: stretch;
+  margin-top: 28px;
+}
+
+.dp-scroll {
+  max-height: 160px;
+  overflow-y: auto;
+  width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(134, 197, 118, 0.3) transparent;
+}
+
+.dp-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.dp-scroll::-webkit-scrollbar-thumb {
+  background: rgba(134, 197, 118, 0.3);
+  border-radius: 4px;
+}
+
+.dp-item {
+  font-family: "Jost", sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(240, 247, 238, 0.6);
+  padding: 7px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.dp-item:hover {
+  background: rgba(134, 197, 118, 0.12);
+  color: #f0f7ee;
+}
+
+.dp-item.selected {
+  background: linear-gradient(135deg, #4caf50, #86c576);
+  color: #0f1e14;
+  font-weight: 500;
+}
+
+.dp-confirm {
+  margin-top: 16px;
+  width: 100%;
+  font-family: "Jost", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #0f1e14;
+  background: linear-gradient(135deg, #86c576, #4caf50);
+  border: none;
+  border-radius: 50px;
+  padding: 11px;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
+}
+
+.dp-confirm:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
 /* .scroll__animation {
   opacity: 0;
   transform: translate(50px);
