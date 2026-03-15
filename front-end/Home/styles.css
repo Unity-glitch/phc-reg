@@ -227,7 +227,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   text-align: center;
   overflow: hidden;
@@ -237,7 +237,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 100px 0 0;
+  padding: 50px 0 0;
 }
 
 h1 {
@@ -256,7 +256,6 @@ p {
   padding-top: 20px;
 }
 .bottom {
-  margin-top: auto;
   width: 100%;
   display: flex;
   justify-content: center;
